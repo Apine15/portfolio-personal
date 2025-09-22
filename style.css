@@ -271,6 +271,72 @@ body {
   color: var(--turquoise);
 }
 
+/* Contact Form Section */
+.contact-form-section {
+  padding: 70px 0;
+  background: linear-gradient(
+    135deg,
+    var(--turquoise) 0%,
+    var(--light-green) 100%
+  );
+}
+
+.contact-form-section h2 {
+  color: var(--russian-violet);
+  font-weight: bold;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.contact-form-section form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(60, 22, 66, 0.08);
+  padding: 2.5rem 2rem;
+}
+
+.contact-form-section .form-label {
+  color: var(--caribbean-current);
+  font-weight: 600;
+}
+
+.contact-form-section .form-control {
+  border-radius: 20px;
+  border: 2px solid var(--turquoise);
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.contact-form-section .form-control:focus {
+  border-color: var(--russian-violet);
+  box-shadow: 0 0 0 2px var(--turquoise, #1dd3b0, 0.2);
+}
+
+.contact-form-section textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-form-section .btn-primary {
+  background: linear-gradient(45deg, var(--caribbean-current), var(--turquoise));
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 25px;
+  padding: 12px 32px;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 10px;
+}
+
+.contact-form-section .btn-primary:hover {
+  background: linear-gradient(45deg, var(--turquoise), var(--green-yellow));
+  color: var(--russian-violet);
+  transform: translateY(-2px) scale(1.04);
+}
+
 /* Footer */
 .footer {
   background-color: var(--russian-violet);
