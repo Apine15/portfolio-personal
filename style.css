@@ -1,0 +1,340 @@
+:root {
+  --russian-violet: #3c1642;
+  --caribbean-current: #086375;
+  --turquoise: #1dd3b0;
+  --green-yellow: #affc41;
+  --light-green: #b2ff9e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Navbar */
+
+.logo-container {
+  width: 6rem;
+  height: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo-container:hover {
+  transform: scale(1.1);
+}
+
+.navbar {
+  background-color: var(--russian-violet) !important;
+  transition: all 0.3s ease;
+  min-height: 50px;
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 70%;
+  border-radius: 5px;
+}
+
+.nav-item {
+  width: 100%;
+  background-color: var(--russian-violet);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+}
+
+.navbar-nav .nav-link {
+  color: var(--light-green) !important;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--turquoise) !important;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg, #000000 0%, var(--russian-violet) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  text-align: center;
+  z-index: 10;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--light-green);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero p {
+  font-size: 2rem;
+  color: var(--turquoise);
+  margin-bottom: 2rem;
+}
+
+.hero .btn {
+  max-width: 14em;
+  background: linear-gradient(45deg, var(--turquoise), var(--green-yellow));
+  border: none;
+  color: var(--russian-violet);
+  font-weight: bold;
+  padding: 12px 30px;
+  border-radius: 25px;
+  transition: transform 0.3s ease;
+  margin-top: 50px;
+}
+
+.hero .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(29, 211, 176, 0.3);
+}
+
+/* Particles Canvas */
+#particles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* About Section */
+.about {
+  padding: 80px 0;
+  background: linear-gradient(
+    135deg,
+    var(--light-green) 0%,
+    var(--turquoise) 100%
+  );
+}
+
+.about h2 {
+  color: var(--russian-violet);
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.about p {
+  font-size: 1.1rem;
+  color: var(--caribbean-current);
+  margin-bottom: 1.5rem;
+}
+
+.skills {
+  margin-top: 2rem;
+}
+
+.skill-item {
+  background: rgba(60, 22, 66, 0.1);
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin: 5px;
+  display: inline-block;
+  color: var(--russian-violet);
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+  border-color: var(--russian-violet);
+  transform: translateY(-2px);
+}
+
+/* Projects Section */
+.projects {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+}
+
+.projects h2 {
+  color: var(--russian-violet);
+  font-weight: bold;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.project-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 2rem;
+  border-top: 4px solid var(--turquoise);
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(29, 211, 176, 0.2);
+}
+
+.project-image img {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+.project-card .card-body {
+  padding: 2rem;
+}
+
+.project-card h5 {
+  color: var(--russian-violet);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.project-card p {
+  color: var(--caribbean-current);
+  margin-bottom: 1.5rem;
+}
+
+.project-card .btn {
+  background: linear-gradient(
+    45deg,
+    var(--caribbean-current),
+    var(--turquoise)
+  );
+  border: none;
+  color: white;
+  border-radius: 25px;
+  padding: 8px 20px;
+  transition: transform 0.3s ease;
+}
+
+.project-card .btn:hover {
+  transform: scale(1.05);
+}
+
+/* Contact Section */
+.contact {
+  padding: 80px 0;
+  background: linear-gradient(
+    135deg,
+    var(--caribbean-current) 0%,
+    var(--russian-violet) 100%
+  );
+  color: white;
+}
+
+.contact h2 {
+  color: var(--light-green);
+  font-weight: bold;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.contact-item {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.contact-item i {
+  font-size: 2rem;
+  color: var(--turquoise);
+  margin-bottom: 1rem;
+}
+
+.contact-item h5 {
+  color: var(--light-green);
+  margin-bottom: 0.5rem;
+}
+
+.contact-item p {
+  color: var(--turquoise);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--russian-violet);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--light-green);
+}
+
+.social-links {
+  margin: 1rem 0;
+}
+
+.social-links a {
+  color: var(--turquoise);
+  font-size: 1.5rem;
+  text-decoration: none;
+  padding: 0 5px;
+  margin: 0 15px;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--green-yellow);
+}
+
+.social-links a i {
+  transition: transform 0.3s ease; /* Transición para la transformación del ícono */
+}
+
+.social-links a:hover i {
+  transform: scale(1.4);
+}
+
+/* Ocultar texto - accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border-width: 0;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo-container {
+    width: 4.5rem;
+    height: 2.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .navbar {
+    max-height: 55px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .hero p {
+    font-size: 1.5rem;
+  }
+}

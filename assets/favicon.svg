@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
+    <!-- Fondo del favicon -->
+    <rect width="100" height="100" rx="20" ry="20" fill="#3C1642" />
+    <!-- Iniciales para el favicon -->
+    <g transform="translate(50, 50)" text-anchor="middle" dominant-baseline="central">
+        <text class="logo-text" fill="#ffffff" font-weight="700" font-size="50" letter-spacing="-2" font-family="Inter, sans-serif">AP</text>
+    </g>
+</svg>
