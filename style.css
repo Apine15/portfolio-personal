@@ -6,51 +6,92 @@
   --light-green: #b2ff9e;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Inter", sans-serif;
-  line-height: 1.6;
-  color: #333;
-}
-
-/* Navbar */
-
-.logo-container {
-  width: 6rem;
-  height: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease-in-out;
-}
-
-.logo-container:hover {
-  transform: scale(1.1);
-}
-
-.navbar {
-  background-color: var(--russian-violet) !important;
-  transition: all 0.3s ease;
-  min-height: 50px;
-}
-
-.navbar-nav {
+.gallery-modal {
+  position: fixed;
+  inset: 0;
   display: flex;
-  justify-content: end;
   align-items: center;
-  width: 70%;
-  border-radius: 5px;
+  justify-content: center;
+  z-index: 2000;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease, visibility 260ms ease;
 }
-
-.nav-item {
+.gallery-modal[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+}
+.gallery-content {
+  position: relative;
+  z-index: 2100;
+  width: min(960px, 92%);
+  height: min(720px, 82%);
+  max-width: 96vw;
+  max-height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 260ms ease, opacity 260ms ease;
+  transform: translateY(6px);
+}
+.gallery-modal[aria-hidden="false"] .gallery-content {
+  transform: translateY(0);
+}
+.gallery-image {
   width: 100%;
-  background-color: var(--russian-violet);
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  display: block;
+  pointer-events: none; /* evitar que la imagen capture clicks sobre los controles */
+  z-index: 2150;
+  border: 3px solid rgba(255,255,255,0.04);
+}
+.gallery-image.visible {
+  opacity: 1;
+}
+.gallery-close, .gallery-prev, .gallery-next {
+  position: absolute;
+  background: rgba(255,255,255,0.95);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 2200;
+}
+.gallery-empty {
+  color: #fff;
+  background: rgba(0,0,0,0.85);
+  padding: 18px 22px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  z-index: 2200;
+  text-align: center;
+  max-width: 90%;
+}
+.gallery-close { top: 10px; right: 10px; }
+.gallery-prev { left: 10px; top: 50%; transform: translateY(-50%); }
+.gallery-next { right: 10px; top: 50%; transform: translateY(-50%); 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 2px;
 }
+
+.logo-container {
+    width: 4.5rem;
+    height: 2.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out;
+  }
 
 .navbar-nav .nav-link {
   color: var(--light-green) !important;
@@ -280,56 +321,7 @@ body {
   margin-left: 0.5rem;
 }
 
-/* Modal galería */
-.gallery-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.gallery-modal[aria-hidden="false"] {
-  display: flex;
-}
-.gallery-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-}
-.gallery-content {
-  position: relative;
-  z-index: 2100;
-  max-width: 90%;
-  max-height: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.gallery-image {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-.gallery-empty {
-  color: white;
-  background: rgba(0,0,0,0.5);
-  padding: 18px 22px;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-.gallery-close, .gallery-prev, .gallery-next {
-  position: absolute;
-  background: rgba(255,255,255,0.9);
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.gallery-close { top: 10px; right: 10px; }
-.gallery-prev { left: 10px; }
-.gallery-next { right: 10px; }
+/* (Se eliminó bloque duplicado del modal para evitar conflictos con las reglas de transición) */
 
 /* Contact Section */
 .contact {
@@ -484,8 +476,8 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .logo-container {
-    width: 4.5rem;
-    height: 2.5rem;
+    width: 4rem;
+    height: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease-in-out;
   }
