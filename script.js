@@ -167,20 +167,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Eliminar posible mensaje "gallery-empty"
                     const prevMsg = galleryContent.querySelector('.gallery-empty');
                     if (prevMsg) prevMsg.remove();
-                    // Visual debug: forzar fondo/borde para detectar caja del <img>
-                    galleryImage.style.backgroundColor = 'rgba(0,0,0,0.15)';
-                    galleryImage.style.border = '3px solid rgba(255,255,255,0.06)';
+                    
                     // establecer opacidad a 0 y luego esperar al load para mostrar
                     galleryImage.style.opacity = '0';
                     galleryImage.onload = function () {
-                        console.log('galleryImage loaded:', galleryImage.src, galleryImage.naturalWidth, galleryImage.naturalHeight);
                         // pequeña espera para permitir la transición
                         requestAnimationFrame(() => {
+                            galleryImage.style.opacity = '';
                             galleryImage.classList.add('visible');
                         });
                     };
-                    galleryImage.onerror = function (e) {
-                        console.warn('galleryImage failed to load', galleryImage.src, e);
+                    galleryImage.onerror = function () {
+                        // silent fail
                     };
                     galleryImage.src = src;
                     galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
@@ -193,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             function openGallery(images, startIndex = 0) {
                 currentImages = images;
                 currentIndex = startIndex;
-                console.log('openGallery images count:', images.length, 'startIndex:', startIndex);
+                
                 showImage();
                 galleryModal.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden';
@@ -234,11 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const images = [];
                 // Primero intentar index.json
                 try {
-                    console.log('Probe folder, requesting', folder + 'index.json');
                     const idxResp = await fetch(folder + 'index.json');
                     if (idxResp.ok) {
                         const list = await idxResp.json();
-                        console.log('Found index.json list:', list);
+                        
                         if (Array.isArray(list) && list.length) {
                             return list.map(f => folder + f);
                         }
@@ -266,7 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const results = await Promise.all(names.map(loadImage));
-                console.log('Probe results sample:', results.filter(Boolean).slice(0,6));
                 for (const r of results) if (r) images.push(r);
                 // quitar duplicados y mantener orden
                 return [...new Set(images)];
@@ -275,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-view-more').forEach(function (btn) {
                 btn.addEventListener('click', async function () {
                     const imgsAttr = (btn.dataset.images || btn.closest('.project-card')?.dataset.images || '').trim();
-                    console.log('Ver más clicked, imgsAttr=', imgsAttr);
                     if (!imgsAttr) return;
 
                     // Si es una carpeta (termina en /), tratar como folder
@@ -285,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         const base = folderPath.startsWith('./') || folderPath.startsWith('/') ? folderPath : './' + folderPath;
                         const found = await probeFolderImages(base);
                         if (found && found.length) {
-                            console.log('Opening gallery with images:', found);
                             openGallery(found, 0);
                         } else {
                             // Ninguna imagen encontrada; mostrar mensaje temporal dentro del modal
