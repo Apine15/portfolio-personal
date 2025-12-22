@@ -148,13 +148,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const galleryPrev = galleryModal.querySelector('.gallery-prev');
             const galleryNext = galleryModal.querySelector('.gallery-next');
             const galleryOverlay = galleryModal.querySelector('.gallery-overlay');
+            const galleryContent = galleryModal.querySelector('.gallery-content');
 
             let currentImages = [];
             let currentIndex = 0;
 
             function showImage() {
-                galleryImage.src = currentImages[currentIndex] || '';
+                const src = currentImages[currentIndex] || '';
+                galleryImage.src = src;
                 galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
+                galleryImage.style.display = src ? '' : 'none';
+                // show/hide prev/next depending on count
+                galleryPrev.style.display = currentImages.length > 1 ? '' : 'none';
+                galleryNext.style.display = currentImages.length > 1 ? '' : 'none';
             }
 
             function openGallery(images, startIndex = 0) {
@@ -193,11 +199,87 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
+            // Intenta obtener imágenes de una carpeta:
+            // 1) si existe index.json en la carpeta, usarlo
+            // 2) si no, probar nombres por convención img1..img6 con extensiones comunes
+            async function probeFolderImages(folder) {
+                const images = [];
+                // Primero intentar index.json
+                try {
+                    const idxResp = await fetch(folder + 'index.json');
+                    if (idxResp.ok) {
+                        const list = await idxResp.json();
+                        if (Array.isArray(list) && list.length) {
+                            return list.map(f => folder + f);
+                        }
+                    }
+                } catch (e) {
+                    // ignore
+                }
+
+                // Probar convención img1..img6 con extensiones
+                const names = [];
+                const maxTry = 6;
+                const exts = ['webp','jpg','png'];
+                for (let i = 1; i <= maxTry; i++) {
+                    for (const ext of exts) {
+                        names.push(folder + 'img' + i + '.' + ext);
+                    }
+                }
+
+                // Cargar en paralelo con Image para detectar cargas válidas
+                const loadImage = (url) => new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(url);
+                    img.onerror = () => resolve(null);
+                    img.src = url;
+                });
+
+                const results = await Promise.all(names.map(loadImage));
+                for (const r of results) if (r) images.push(r);
+                // quitar duplicados y mantener orden
+                return [...new Set(images)];
+            }
+
             document.querySelectorAll('.btn-view-more').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    const imgsAttr = btn.dataset.images || btn.closest('.project-card')?.dataset.images || '';
-                    const imgs = imgsAttr.split(',').map(s => s.trim()).filter(Boolean);
-                    if (imgs.length) openGallery(imgs, 0);
+                btn.addEventListener('click', async function () {
+                    const imgsAttr = (btn.dataset.images || btn.closest('.project-card')?.dataset.images || '').trim();
+                    if (!imgsAttr) return;
+
+                    // Si es una carpeta (termina en /), tratar como folder
+                    if (imgsAttr.endsWith('/')) {
+                        const folderPath = imgsAttr;
+                        // Asegurar que comience con ./ o / for relative paths used elsewhere
+                        const base = folderPath.startsWith('./') || folderPath.startsWith('/') ? folderPath : './' + folderPath;
+                        const found = await probeFolderImages(base);
+                        if (found && found.length) {
+                            openGallery(found, 0);
+                        } else {
+                            // Ninguna imagen encontrada; mostrar mensaje temporal dentro del modal
+                            currentImages = [];
+                            currentIndex = 0;
+                            showImage();
+                            // mostrar texto informativo
+                            galleryImage.style.display = 'none';
+                            let msg = galleryContent.querySelector('.gallery-empty');
+                            if (!msg) {
+                                msg = document.createElement('div');
+                                msg.className = 'gallery-empty';
+                                msg.textContent = 'No hay imágenes disponibles para este proyecto.';
+                                galleryContent.appendChild(msg);
+                            }
+                            galleryModal.setAttribute('aria-hidden', 'false');
+                            document.body.style.overflow = 'hidden';
+                        }
+                    } else {
+                        // lista separada por comas o único archivo
+                        const imgs = imgsAttr.split(',').map(s => s.trim()).filter(Boolean);
+                        if (imgs.length) {
+                            // normalizar rutas relativas
+                            const normalized = imgs.map(p => (p.startsWith('./') || p.startsWith('/')) ? p : './' + p);
+                            openGallery(normalized, 0);
+                        }
+                    }
                 });
             });
         });

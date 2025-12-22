@@ -312,6 +312,13 @@ body {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+.gallery-empty {
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 18px 22px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
 .gallery-close, .gallery-prev, .gallery-next {
   position: absolute;
   background: rgba(255,255,255,0.9);
@@ -494,4 +501,13 @@ body {
   .hero p {
     font-size: 1.5rem;
   }
+  .project-thumb-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.2rem;
+  }
+  .project-card .card-body {
+    padding: 0.9rem;
+  }
+  .project-image { height: 120px; padding: 8px; }
 }
