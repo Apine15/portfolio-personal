@@ -140,4 +140,64 @@ document.addEventListener('DOMContentLoaded', function() {
                     navbar.style.backgroundColor = 'var(--russian-violet)';
                 }
             });
+
+            // Galería / Modal "Ver más"
+            const galleryModal = document.getElementById('gallery-modal');
+            const galleryImage = galleryModal.querySelector('.gallery-image');
+            const galleryClose = galleryModal.querySelector('.gallery-close');
+            const galleryPrev = galleryModal.querySelector('.gallery-prev');
+            const galleryNext = galleryModal.querySelector('.gallery-next');
+            const galleryOverlay = galleryModal.querySelector('.gallery-overlay');
+
+            let currentImages = [];
+            let currentIndex = 0;
+
+            function showImage() {
+                galleryImage.src = currentImages[currentIndex] || '';
+                galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
+            }
+
+            function openGallery(images, startIndex = 0) {
+                currentImages = images;
+                currentIndex = startIndex;
+                showImage();
+                galleryModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeGallery() {
+                galleryModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            galleryPrev.addEventListener('click', function () {
+                if (!currentImages.length) return;
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                showImage();
+            });
+
+            galleryNext.addEventListener('click', function () {
+                if (!currentImages.length) return;
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                showImage();
+            });
+
+            galleryClose.addEventListener('click', closeGallery);
+            galleryOverlay.addEventListener('click', closeGallery);
+
+            document.addEventListener('keydown', function (e) {
+                if (galleryModal.getAttribute('aria-hidden') === 'false') {
+                    if (e.key === 'Escape') closeGallery();
+                    if (e.key === 'ArrowRight') galleryNext.click();
+                    if (e.key === 'ArrowLeft') galleryPrev.click();
+                }
+            });
+
+            document.querySelectorAll('.btn-view-more').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const imgsAttr = btn.dataset.images || btn.closest('.project-card')?.dataset.images || '';
+                    const imgs = imgsAttr.split(',').map(s => s.trim()).filter(Boolean);
+                    if (imgs.length) openGallery(imgs, 0);
+                });
+            });
         });
