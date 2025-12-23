@@ -520,6 +520,12 @@
     margin-bottom: 1rem;
 }
 
+/* Espaciado para los iconos de skills */
+.skill-item i {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .logo-container {
