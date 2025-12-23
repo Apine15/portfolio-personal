@@ -472,6 +472,54 @@
   white-space: nowrap;
 }
 
+/* --- Nuevos estilos para Cards Profesionales --- */
+
+/* Contenedor de etiquetas */
+.tech-stack {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+/* Diseño de la etiqueta individual */
+.tech-tag {
+    background-color: rgba(8, 99, 117, 0.1); /* Color Caribbean con transparencia */
+    color: var(--caribbean-current);
+    border: 1px solid var(--caribbean-current);
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Botón de Código Privado */
+.disabled-btn {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.disabled-btn:hover {
+    background-color: #f8f9fa; /* Evita cambio de color al pasar el mouse */
+    color: #6c757d;
+    transform: none !important; /* Evita que el botón "salte" si tienes animaciones */
+}
+
+/* Mejora sutil para las descripciones */
+.project-info p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .logo-container {

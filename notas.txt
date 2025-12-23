@@ -1,6 +1,0 @@
-
-Agregar:
-
-- Función final a agregar: opción de cambiar idioma.
-
-- Documentar
