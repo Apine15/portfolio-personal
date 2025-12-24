@@ -342,6 +342,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         formStatus.textContent = '¡Gracias por tu mensaje! Te responderé a la brevedad.';
                         formStatus.style.display = 'block';
                         contactForm.reset(); // Limpia los campos
+
+                        setTimeout(() => {
+                            formStatus.style.display = 'none';
+                        }, 4000);
                     } else {
                         // Error del servidor (ej: validación)
                         const data = await response.json();
