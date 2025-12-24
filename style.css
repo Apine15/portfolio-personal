@@ -6,6 +6,12 @@
   --light-green: #b2ff9e;
 }
 
+html {
+  scroll-behavior: smooth;
+  /* Esto evita que el menú tape el título de la sección al bajar */
+  scroll-padding-top: 55px; 
+}
+
 .gallery-modal {
   position: fixed;
   inset: 0;
