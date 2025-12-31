@@ -558,7 +558,6 @@ section {
   transform: translateY(-3px);
 }
 
-/* --- Gallery Modal (Mantenido funcional, estilizado) --- */
 .gallery-modal {
   position: fixed;
   inset: 0;
@@ -568,12 +567,19 @@ section {
   z-index: 2000;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  pointer-events: none;
+  /* CRITICAL: Prevent clicks when hidden */
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+  /* Delay hiding visibility until fade completes */
 }
 
 .gallery-modal[aria-hidden="false"] {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
+  /* Re-enable clicks when visible */
+  transition: opacity 0.3s ease, visibility 0s 0s;
+  /* Show instantly */
 }
 
 .gallery-overlay {
