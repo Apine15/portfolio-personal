@@ -168,36 +168,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showImage() {
         const src = currentImages[currentIndex] || '';
-        galleryImage.classList.remove('visible');
-        if (!src) {
-            galleryImage.src = '';
-            galleryImage.alt = '';
-            galleryImage.style.display = 'none';
-        } else {
-            galleryImage.style.display = '';
-            // Remove empty message if exists
-            const prevMsg = galleryContent.querySelector('.gallery-empty');
-            if (prevMsg) prevMsg.remove();
 
-            galleryImage.style.opacity = '0';
-            galleryImage.onload = function () {
-                requestAnimationFrame(() => {
-                    galleryImage.style.opacity = '';
-                    galleryImage.classList.add('visible');
-                });
-            };
-            galleryImage.src = src;
-            galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
-        }
-        galleryPrev.style.display = currentImages.length > 1 ? '' : 'none';
-        galleryNext.style.display = currentImages.length > 1 ? '' : 'none';
+        // Reset visual state
+        galleryImage.style.display = 'none';
+        galleryImage.classList.remove('visible');
+
+        if (!src) return;
+
+        galleryImage.style.display = 'block';
+        // Set opacity 0 initially for fade effect
+        galleryImage.style.opacity = '0';
+
+        galleryImage.onload = function () {
+            galleryImage.style.opacity = '1';
+            galleryImage.classList.add('visible');
+        };
+
+        galleryImage.onerror = function () {
+            // Ensure visible even if broken (shows alt text/icon)
+            galleryImage.style.opacity = '1';
+            galleryImage.classList.add('visible');
+        };
+
+        galleryImage.src = src;
+        galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
+
+        // Buttons visibility
+        galleryPrev.style.display = currentImages.length > 1 ? 'flex' : 'none';
+        galleryNext.style.display = currentImages.length > 1 ? 'flex' : 'none';
     }
 
     function openGallery(images) {
+        // Limpiar mensaje de "vacío" si existe
+        const prevMsg = galleryContent.querySelector('.gallery-empty');
+        if (prevMsg) prevMsg.remove();
+
         if (!images || images.length === 0) {
-            // Show "No images" message
             currentImages = [];
             galleryImage.style.display = 'none';
+            // Crear mensaje solo si no existe
             let msg = galleryContent.querySelector('.gallery-empty');
             if (!msg) {
                 msg = document.createElement('div');
