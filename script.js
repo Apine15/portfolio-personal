@@ -85,7 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Animation loop
+        let animationId;
+        let isAnimating = true;
+
         function animate() {
+            if (!isAnimating) return;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             // Draw connections
@@ -112,10 +117,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 particle.draw();
             });
             
-            requestAnimationFrame(animate);
+            animationId = requestAnimationFrame(animate);
         }
         
-        animate();
+        // Performance Optimization: Intersection Observer for Particles
+        const heroSection = document.getElementById('inicio');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!isAnimating) {
+                        isAnimating = true;
+                        animate();
+                    }
+                } else {
+                    isAnimating = false;
+                    cancelAnimationFrame(animationId);
+                }
+            });
+        }, { threshold: 0 });
+
+        if (heroSection) {
+            observer.observe(heroSection);
+        } else {
+             animate(); // Fallback if user removes ID
+        }
         
         // Navbar background on scroll
         window.addEventListener('scroll', function() {
@@ -146,39 +171,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 galleryImage.src = '';
                 galleryImage.alt = '';
                 galleryImage.style.display = 'none';
-                galleryImage.classList.remove('visible');
             } else {
-                // Asegurar que la imagen esté visible si antes fue ocultada
                 galleryImage.style.display = '';
-                // Eliminar posible mensaje "gallery-empty"
+                // Remove empty message if exists
                 const prevMsg = galleryContent.querySelector('.gallery-empty');
                 if (prevMsg) prevMsg.remove();
                 
-                // establecer opacidad a 0 y luego esperar al load para mostrar
                 galleryImage.style.opacity = '0';
                 galleryImage.onload = function () {
-                    // pequeña espera para permitir la transición
                     requestAnimationFrame(() => {
                         galleryImage.style.opacity = '';
                         galleryImage.classList.add('visible');
                     });
                 };
-                galleryImage.onerror = function () {
-                    // silent fail
-                };
                 galleryImage.src = src;
                 galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
             }
-            // show/hide prev/next dependiendo de la cantidad
             galleryPrev.style.display = currentImages.length > 1 ? '' : 'none';
             galleryNext.style.display = currentImages.length > 1 ? '' : 'none';
         }
 
-        function openGallery(images, startIndex = 0) {
-            currentImages = images;
-            currentIndex = startIndex;
+        function openGallery(images) {
+            if (!images || images.length === 0) {
+                 // Show "No images" message
+                currentImages = [];
+                galleryImage.style.display = 'none';
+                let msg = galleryContent.querySelector('.gallery-empty');
+                if (!msg) {
+                    msg = document.createElement('div');
+                    msg.className = 'gallery-empty';
+                    msg.textContent = 'No hay imágenes disponibles para este proyecto.';
+                    galleryContent.appendChild(msg);
+                }
+                galleryPrev.style.display = 'none';
+                galleryNext.style.display = 'none';
+            } else {
+                currentImages = images;
+                currentIndex = 0;
+                showImage();
+            }
             
-            showImage();
             galleryModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
         }
@@ -211,88 +243,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Intenta obtener imágenes de una carpeta:
-        // 1) si existe index.json en la carpeta, usarlo
-        // 2) si no, probar nombres por convención img1..img6 con extensiones comunes
-        async function probeFolderImages(folder) {
-            const images = [];
-            // Primero intentar index.json
-            try {
-                const idxResp = await fetch(folder + 'index.json');
-                if (idxResp.ok) {
-                    const list = await idxResp.json();
-                    
-                    if (Array.isArray(list) && list.length) {
-                        return list.map(f => folder + f);
-                    }
-                }
-            } catch (e) {
-                // ignore
-            }
-
-            // Probar convención img1..img6 con extensiones
-            const names = [];
-            const maxTry = 6;
-            const exts = ['webp','jpg','png'];
-            for (let i = 1; i <= maxTry; i++) {
-                for (const ext of exts) {
-                    names.push(folder + 'img' + i + '.' + ext);
-                }
-            }
-
-            // Cargar en paralelo con Image para detectar cargas válidas
-            const loadImage = (url) => new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(url);
-                img.onerror = () => resolve(null);
-                img.src = url;
-            });
-
-            const results = await Promise.all(names.map(loadImage));
-            for (const r of results) if (r) images.push(r);
-            // quitar duplicados y mantener orden
-            return [...new Set(images)];
-        }
-
         document.querySelectorAll('.btn-view-more').forEach(function (btn) {
-            btn.addEventListener('click', async function () {
-                const imgsAttr = (btn.dataset.images || btn.closest('.project-card')?.dataset.images || '').trim();
-                if (!imgsAttr) return;
-
-                // Si es una carpeta (termina en /), tratar como folder
-                if (imgsAttr.endsWith('/')) {
-                    const folderPath = imgsAttr;
-                    // Asegurar que comience con ./ o / for relative paths used elsewhere
-                    const base = folderPath.startsWith('./') || folderPath.startsWith('/') ? folderPath : './' + folderPath;
-                    const found = await probeFolderImages(base);
-                    if (found && found.length) {
-                        openGallery(found, 0);
-                    } else {
-                        // Ninguna imagen encontrada; mostrar mensaje temporal dentro del modal
-                        currentImages = [];
-                        currentIndex = 0;
-                        showImage();
-                        // mostrar texto informativo
-                        galleryImage.style.display = 'none';
-                        let msg = galleryContent.querySelector('.gallery-empty');
-                        if (!msg) {
-                            msg = document.createElement('div');
-                            msg.className = 'gallery-empty';
-                            msg.textContent = 'No hay imágenes disponibles para este proyecto.';
-                            galleryContent.appendChild(msg);
-                        }
-                        galleryModal.setAttribute('aria-hidden', 'false');
-                        document.body.style.overflow = 'hidden';
-                    }
-                } else {
-                    // lista separada por comas o único archivo
-                    const imgs = imgsAttr.split(',').map(s => s.trim()).filter(Boolean);
-                    if (imgs.length) {
-                        // normalizar rutas relativas
-                        const normalized = imgs.map(p => (p.startsWith('./') || p.startsWith('/')) ? p : './' + p);
-                        openGallery(normalized, 0);
-                    }
+            btn.addEventListener('click', function () {
+                // Get images directly from data attribute
+                // Support both on button or parent card
+                const imagesStr = (btn.dataset.images || btn.closest('.project-card')?.dataset.images || '').trim();
+                
+                if (!imagesStr) {
+                    openGallery([]); 
+                    return;
                 }
+
+                const images = imagesStr.split(',')
+                    .map(s => s.trim())
+                    .filter(Boolean);
+                
+                openGallery(images);
             });
         });
 
