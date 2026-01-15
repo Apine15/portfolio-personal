@@ -1,0 +1,17 @@
+{
+	"title": "Gestor de Notas",
+	"short_description": "App Full Stack para crear, listar, archivar y categorizar notas. Backend en NestJS y frontend en React (Vite).",
+	"media": ["./assets/projects/9/gestor-notas.mp4"],
+	"technologies": [
+		"NestJS",
+		"TypeORM",
+		"SQLite",
+		"TypeScript",
+		"React",
+		"Vite",
+		"Axios",
+		"CSS"
+	],
+	"repo": "https://github.com/Apine15/app-gestor-notas"
+}
+
