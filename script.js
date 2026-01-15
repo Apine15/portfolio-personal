@@ -308,12 +308,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelectorAll('.btn-view-more').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', async function () {
             // Get images directly from data attribute
             // Support both on button or parent card
             const imagesStr = (btn.dataset.images || btn.closest('.project-card')?.dataset.images || '').trim();
 
             if (!imagesStr) {
+                // Fallback: try to fetch assets/projects/{id}/index.json when data-project is present
+                const projectId = btn.closest('.project-card')?.dataset.project;
+                if (projectId) {
+                    try {
+                        const resp = await fetch(`./assets/projects/${projectId}/index.json`, { cache: 'no-store' });
+                        if (resp.ok) {
+                            const data = await resp.json();
+                            const files = Array.isArray(data) ? data : (typeof data === 'string' ? [data] : []);
+                            const images = files.map(name => `./assets/projects/${projectId}/${name}`).filter(Boolean);
+                            openGallery(images);
+                            return;
+                        } else {
+                            console.warn('index.json no encontrado para proyecto', projectId);
+                        }
+                    } catch (err) {
+                        console.error('Error leyendo index.json del proyecto', projectId, err);
+                    }
+                }
+
                 openGallery([]);
                 return;
             }
