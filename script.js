@@ -166,32 +166,73 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentImages = [];
     let currentIndex = 0;
 
+    function ensureGalleryVideo() {
+        let v = galleryModal.querySelector('.gallery-video');
+        if (!v) {
+            v = document.createElement('video');
+            v.className = 'gallery-video';
+            v.controls = true;
+            v.playsInline = true;
+            v.style.display = 'none';
+            v.style.maxWidth = '100%';
+            v.style.maxHeight = '80vh';
+            galleryContent.appendChild(v);
+        }
+        return v;
+    }
+
     function showImage() {
         const src = currentImages[currentIndex] || '';
 
         // Reset visual state
+        // Hide image and any existing video
         galleryImage.style.display = 'none';
         galleryImage.classList.remove('visible');
+        const existingVideo = galleryModal.querySelector('.gallery-video');
+        if (existingVideo) {
+            try { existingVideo.pause(); } catch (e) {}
+            existingVideo.style.display = 'none';
+            existingVideo.removeAttribute('src');
+            existingVideo.load();
+        }
 
         if (!src) return;
 
-        galleryImage.style.display = 'block';
-        // Set opacity 0 initially for fade effect
-        galleryImage.style.opacity = '0';
+        const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(src);
 
-        galleryImage.onload = function () {
-            galleryImage.style.opacity = '1';
-            galleryImage.classList.add('visible');
-        };
+        if (isVideo) {
+            const videoEl = ensureGalleryVideo();
+            videoEl.style.display = 'block';
+            videoEl.src = src;
+            videoEl.setAttribute('aria-label', `Video ${currentIndex + 1} de ${currentImages.length}`);
+            videoEl.onerror = function () {
+                // Fallback: show a simple message
+                videoEl.style.display = 'none';
+                const msg = document.createElement('div');
+                msg.className = 'gallery-empty';
+                msg.textContent = 'No se pudo cargar el video.';
+                galleryContent.appendChild(msg);
+            };
+            // Try to play (may be blocked), controls are available
+            videoEl.load();
+            videoEl.play().catch(() => {});
+        } else {
+            galleryImage.style.display = 'block';
+            galleryImage.style.opacity = '0';
 
-        galleryImage.onerror = function () {
-            // Ensure visible even if broken (shows alt text/icon)
-            galleryImage.style.opacity = '1';
-            galleryImage.classList.add('visible');
-        };
+            galleryImage.onload = function () {
+                galleryImage.style.opacity = '1';
+                galleryImage.classList.add('visible');
+            };
 
-        galleryImage.src = src;
-        galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
+            galleryImage.onerror = function () {
+                galleryImage.style.opacity = '1';
+                galleryImage.classList.add('visible');
+            };
+
+            galleryImage.src = src;
+            galleryImage.alt = `Imagen ${currentIndex + 1} de ${currentImages.length}`;
+        }
 
         // Buttons visibility
         galleryPrev.style.display = currentImages.length > 1 ? 'flex' : 'none';
@@ -206,6 +247,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!images || images.length === 0) {
             currentImages = [];
             galleryImage.style.display = 'none';
+            const existingVideo = galleryModal.querySelector('.gallery-video');
+            if (existingVideo) {
+                try { existingVideo.pause(); } catch (e) {}
+                existingVideo.style.display = 'none';
+            }
             // Crear mensaje solo si no existe
             let msg = galleryContent.querySelector('.gallery-empty');
             if (!msg) {
@@ -229,6 +275,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function closeGallery() {
         galleryModal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+        const existingVideo = galleryModal.querySelector('.gallery-video');
+        if (existingVideo) {
+            try { existingVideo.pause(); } catch (e) {}
+            existingVideo.style.display = 'none';
+            existingVideo.removeAttribute('src');
+            existingVideo.load();
+        }
     }
 
     galleryPrev.addEventListener('click', function () {
