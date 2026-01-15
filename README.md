@@ -31,6 +31,13 @@ El objetivo principal fue crear una "Single Page Application" (SPA) estática qu
 * **🔍 SEO Optimized:** Implementación de metaetiquetas Open Graph para previsualización social profesional en LinkedIn y WhatsApp.
 * **♿ Accesibilidad:** Navegación por teclado, textos alternativos y contrastes cuidados.
 
+
+**Galería — Soporte de video e index.json dinámico**
+
+- La galería del portafolio ahora detecta y reproduce archivos de video (`.mp4`, `.webm`, `.ogg`) además de imágenes.
+- Si una tarjeta de proyecto no incluye rutas en su atributo `data-images`, el JavaScript intentará cargar `assets/projects/{ID}/index.json` (donde `{ID}` es el valor de `data-project`) y usar los archivos listados allí como recursos de la galería.
+- Esto permite mantener los archivos multimedia de cada proyecto en `assets/projects/{ID}/` y evitar duplicar rutas en el HTML.
+
 ---
 
 ## 🛠️ Tecnologías Utilizadas
@@ -100,11 +107,3 @@ portfolio/
 
 
 &copy; 2025 Todos los derechos reservados. </p>---
-
-**Galería — Soporte de video e index.json dinámico**
-
-- La galería del portafolio ahora detecta y reproduce archivos de video (`.mp4`, `.webm`, `.ogg`) además de imágenes.
-- Si una tarjeta de proyecto no incluye rutas en su atributo `data-images`, el JavaScript intentará cargar `assets/projects/{ID}/index.json` (donde `{ID}` es el valor de `data-project`) y usar los archivos listados allí como recursos de la galería.
-- Esto permite mantener los archivos multimedia de cada proyecto en `assets/projects/{ID}/` y evitar duplicar rutas en el HTML.
-
-Prueba rápida: sirve el proyecto localmente y abre `index.html`; al abrir la galería del proyecto que tenga videos, verás un reproductor con controles.
