@@ -99,4 +99,12 @@ portfolio/
 <p align="center"> Hecho con ❤️ y mucho código por Andrea Pineda.
 
 
-&copy; 2025 Todos los derechos reservados. </p>
+&copy; 2025 Todos los derechos reservados. </p>---
+
+**Galería — Soporte de video e index.json dinámico**
+
+- La galería del portafolio ahora detecta y reproduce archivos de video (`.mp4`, `.webm`, `.ogg`) además de imágenes.
+- Si una tarjeta de proyecto no incluye rutas en su atributo `data-images`, el JavaScript intentará cargar `assets/projects/{ID}/index.json` (donde `{ID}` es el valor de `data-project`) y usar los archivos listados allí como recursos de la galería.
+- Esto permite mantener los archivos multimedia de cada proyecto en `assets/projects/{ID}/` y evitar duplicar rutas en el HTML.
+
+Prueba rápida: sirve el proyecto localmente y abre `index.html`; al abrir la galería del proyecto que tenga videos, verás un reproductor con controles.
