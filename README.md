@@ -106,5 +106,5 @@ portfolio/
 <p align="center"> Hecho con ❤️ y mucho código por Andrea Pineda. </p>
 
 
-<p align="center"> &copy; 2025 Todos los derechos reservados. </p>
+<p align="center"> &copy; 2026 - Todos los derechos reservados. </p>
 ---
